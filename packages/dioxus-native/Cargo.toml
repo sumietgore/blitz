@@ -70,6 +70,7 @@ anyrender_vello = { workspace = true, optional = true}
 anyrender_vello_hybrid = { workspace = true, optional = true}
 anyrender_vello_cpu = { workspace = true, optional = true}
 anyrender_skia = { workspace = true, optional = true}
+wgpu = { workspace = true }
 
 # DioxusLabs dependencies
 dioxus-core = { workspace = true }

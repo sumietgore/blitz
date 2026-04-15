@@ -16,6 +16,7 @@ pub use anyrender_vello::{
     CustomPaintSource, VelloRendererOptions, VelloWindowRenderer as InnerRenderer,
 };
 
+
 #[cfg(any(
     feature = "vello-cpu-base",
     all(
@@ -26,7 +27,10 @@ pub use anyrender_vello::{
 use anyrender_vello_cpu::VelloCpuWindowRenderer as InnerRenderer;
 
 #[cfg(feature = "vello-hybrid")]
-use anyrender_vello_hybrid::VelloHybridWindowRenderer as InnerRenderer;
+use anyrender_vello_hybrid::{VelloHybridRendererOptions, VelloHybridWindowRenderer as InnerRenderer};
+
+#[cfg(feature = "vello-hybrid")]
+use wgpu::{Features, Limits};
 
 #[cfg(feature = "skia")]
 use anyrender_skia::SkiaWindowRenderer as InnerRenderer;
@@ -82,6 +86,16 @@ impl DioxusNativeWindowRenderer {
     ))]
     pub fn with_features_and_limits(features: Option<Features>, limits: Option<Limits>) -> Self {
         let vello_renderer = InnerRenderer::with_options(VelloRendererOptions {
+            features,
+            limits,
+            ..Default::default()
+        });
+        Self::with_inner_renderer(vello_renderer)
+    }
+
+    #[cfg(feature = "vello-hybrid")]
+    pub fn with_features_and_limits(features: Option<Features>, limits: Option<Limits>) -> Self {
+        let vello_renderer = InnerRenderer::with_options(VelloHybridRendererOptions {
             features,
             limits,
             ..Default::default()

@@ -45,6 +45,8 @@ pub fn current_android_app() -> android_activity::AndroidApp {
 #[cfg(target_os = "android")]
 #[cfg_attr(docsrs, doc(cfg(target_os = "android")))]
 pub use android_activity::AndroidApp;
+#[cfg(feature = "vello-hybrid")]
+use wgpu::{Features, Limits};
 
 #[cfg(any(
     feature = "vello",
@@ -232,12 +234,27 @@ pub fn launch_cfg_with_props<P: Clone + 'static, M: 'static>(
     let renderer = DioxusNativeWindowRenderer::with_features_and_limits(features, limits);
     #[cfg(not(any(
         feature = "vello",
+        feature = "vello-hybrid",
         all(
             not(feature = "alt-renderer"),
             not(all(target_os = "ios", target_abi = "sim"))
         )
     )))]
     let renderer = DioxusNativeWindowRenderer::new();
+
+    #[cfg(feature = "vello-hybrid")]
+    let features = Features::empty();
+
+    #[cfg(feature = "vello-hybrid")]
+    let limits = Limits {
+        max_texture_dimension_1d:4096,
+        max_texture_dimension_2d:4096,
+        ..Limits::downlevel_defaults()
+    };
+
+    #[cfg(feature = "vello-hybrid")]
+    let renderer = DioxusNativeWindowRenderer::with_features_and_limits(Some(features), Some(limits));
+
     let config = WindowConfig::with_attributes(
         Box::new(doc) as _,
         renderer.clone(),
