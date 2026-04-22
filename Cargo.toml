@@ -103,7 +103,7 @@ anyrender_serialize = { version = "0.1" }
 anyrender_vello = { version = "0.8" }
 anyrender_vello_cpu = { version = "0.10" }
 anyrender_vello_hybrid = { version = "0.3" }
-anyrender_skia = { version = "0.5" }
+anyrender_skia = { version = "0.5", features = ["vulkan"] }
 anyrender_svg = { version = "0.9" }
 wgpu_context = { version = "0.4" }
 
